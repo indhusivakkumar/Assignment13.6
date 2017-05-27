@@ -1,0 +1,79 @@
+1. What kind of data Hbase can store.
+
+ * Hbase is a column-oriented database which can store and manage structured and semi-structured data.
+ * The data stored in HBase can be manipulated using Hadoop’s MapReduce capabilities.
+ * Data is stored and retrieved in columns so that it can read only relevant data if some data is required.
+
+=======================================================================================================================================================================
+2. Explain the important terms in hbase architecture.
+
+HBase architecture consists of 3 important components.They are
+ 
+ HMaster
+ Region Server 
+ ZooKeeper
+
+HMaster:
+ HMaster is a lightweight process that assigns regions to region servers in the Hadoop cluster for load balancing. HMaster has several responsibilities.They are:
+
+ * It Controls the failover
+ *It Performs Administration
+ *It Manages and Monitors the Hadoop Cluster
+ *HMaster handles DDL operations
+ *Whenever a client wants to change the schema and change any of the metadata operations, HMaster is responsible for all these operations.
+
+Region Server:
+ *Region Servers  are the worker nodes which handle read, write, update, and delete requests from clients. 
+ *Region Server process runs on every node in the hadoop cluster.
+ *It runs on HDFS DataNode 
+ *It consists of the following components –
+
+Block Cache : Block cache is a read cache in which most frequently read data is stored  and whenever the block cache is full, recently used data is evicted.
+MemStore: MemStore is the write cache in which new data that is not yet written to the disk is stored. All the column families in a region has a MemStore.
+Write Ahead Log (WAL):WAL is a file in which new data that is not persisted to permanent storage is stored.
+HFile:It is the actual storage file that stores the rows as sorted key values on a disk.
+
+ZooKeeper
+* ZooKeeper is a distributed coordination service for region assignments and to recover any region server crashes by loading them onto other region servers
+  which are functioning. 
+* It has ephemeral nodes representing different region servers. Master servers use these nodes to discover available servers.
+* The nodes are also used to track server failures or network partitions.
+* Clients communicate with region servers via zookeeper.
+* It is a centralized monitoring server which maintains configuration information and  used to provide distributed synchronization.
+
+Uses:
+*Establishing client communication with region servers.
+*Tracking server failure and network partitions.
+*Maintain Configuration Information
+
+======================================================================================================================================================================
+
+3. What is zookeeper? What happens if the zookeeper service is stopped.
+
+ZooKeeper
+* ZooKeeper is a distributed coordination service for region assignments and to recover any region server crashes by loading them onto other region servers
+ which are functioning. 
+* It is a centralized monitoring server which maintains configuration information and  used to provide distributed synchronization.
+* It has ephemeral nodes representing different region servers. Master servers use these nodes to discover available servers.
+* The nodes are also used to track server failures or network partitions.
+* Clients communicate with region servers via zookeeper.
+
+What happens if the zookeeper service is stopped.
+If you have more than one Zookeeper(ZK) node then if  ZK node that went down then the CLDB will get a disconnect exception from it and shut itself down.
+ The warden process running on the same machine should've restarted the CLDB within a minute, and the CLDB would reconnect to the new ZK master.
+
+======================================================================================================================================================================
+4. Is it necessary that region server be located on all DataNodes?
+
+No it is not necessary that region server be located on all DataNodes but it is recommended that you install HBase RegionServers on each datanode since
+RegionServers can benefit from "short-circuit" reads which can only happen when the RegionServer is co-located with the Datanode.
+
+=======================================================================================================================================================================
+5. How will you implement joins in Hbase?
+
+There are some ways to  implement joins in Hbase.They are:
+* Load data in HIVE and design hive queries to perform joins in HBase
+* Develop map reduce application to perform join.
+* Load the HBase tables into Impala and perform a SQL join with those tools.
+
+=====================================================================================================================================================================
